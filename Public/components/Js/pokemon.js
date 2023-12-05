@@ -1,9 +1,9 @@
 // Selecting items
-const listWrapper = document.getElementsByClassName("list-wrapper");
-const searchInput = document.getElementById("search-input");
-const numberFilter = document.getElementById("number");
-const nameFilter = document.getElementById("name");
-const notFoundMessage = document.getElementById("not-found-message"); 
+const listWrapper = document.querySelector(".list-wrapper");
+const searchInput = document.querySelector("#search-input");
+const numberFilter = document.querySelector("#number");
+const nameFilter = document.querySelector("#name");
+const notFoundMessage = document.querySelector("#not-found-message"); 
 
 // Global variables
 const MAX_POKEMON = 151;
@@ -36,9 +36,9 @@ async function fetchPokemonDataBeforeRedirect(id) {
     }
 }
 
-
+// Create container for the pokemons
 function displayPokemons(pokemon) {
-    listWrapper.innerHtml = "";
+    listWrapper.innerHTML = "";
 
     pokemon.forEach(pokemon => {
         const pokemonId = pokemon.url.split("/")[6];
@@ -49,7 +49,7 @@ function displayPokemons(pokemon) {
                 <p class="caption-fonts">#${pokemonId}</p>
             </div>
             <div class="image-wrap">
-                <img src="https://github.com/PokeAPI/sprites/blob/master/sprites/pokemon/${pokemonId}.png" alt="${pokemon.name}"/>
+                <img src="https://raw.github.com/pokeapi/sprites/master/sprites/pokemon/other/dream-world/${pokemonId}.svg" alt="${pokemon.name}"/>
             </div>
             <div class="name-wrap">
                 <p class="body3-fonts">${pokemon.name}</p>
@@ -65,4 +65,33 @@ function displayPokemons(pokemon) {
 
         listWrapper.appendChild(listItem)
     });
+}
+
+
+searchInput.addEventListener("keyup", handleSearch);
+
+function handleSearch() {
+    const searchTerm = searchInput.value.toLowerCase();
+    let filteredPokemons;
+
+    if(numberFilter.checked) {
+        filteredPokemons = allPokemons.filter((pokemon) => {
+            const pokemonId = pokemon.url.split("/")[6];
+            return pokemonId.startsWith(searchTerm);
+        });
+    }   else if(nameFilter.checked){
+        filteredPokemons = allPokemons.filter((pokemon) => {
+            pokemon.name.toLowerCase().startsWith(searchTerm);
+        });
+    }   else {
+        filteredPokemons = allPokemons;
+    }
+
+    displayPokemons(filteredPokemons);
+
+    if(filteredPokemons.length === 0) {
+        notFoundMessage.style.display = "block"
+    } else {
+        notFoundMessage.style.display = "none"
+    }
 }
