@@ -5,6 +5,8 @@ const numberFilter = document.querySelector("#number");
 const nameFilter = document.querySelector("#name");
 const notFoundMessage = document.querySelector("#not-found-message"); 
 
+const closeBtn = document.querySelector(".search-close-icon");
+
 // Global variables
 const MAX_POKEMON = 151;
 
@@ -80,9 +82,9 @@ function handleSearch() {
             return pokemonId.startsWith(searchTerm);
         });
     }   else if(nameFilter.checked){
-        filteredPokemons = allPokemons.filter((pokemon) => {
-            pokemon.name.toLowerCase().startsWith(searchTerm);
-        });
+        filteredPokemons = allPokemons.filter((pokemon) => 
+            pokemon.name.toLowerCase().startsWith(searchTerm)
+        );
     }   else {
         filteredPokemons = allPokemons;
     }
@@ -94,4 +96,12 @@ function handleSearch() {
     } else {
         notFoundMessage.style.display = "none"
     }
+}
+
+closeBtn.addEventListener("click", clearSearch)
+
+function clearSearch() {
+    searchInput.value = '';
+    displayPokemons(allPokemons);
+    notFoundMessage.style.display = "none"
 }
